@@ -11,3 +11,25 @@
   width: 80px;
   background: gray;
 }
+
+.square svg {
+  height: 60px;
+  width: 60px;
+  margin: 10px;
+}
+
+.light-square {
+  background-color: rgb(213, 213, 168);
+}
+
+.dark-square {
+  background-color: rgba(117, 150, 85, 255);
+}
+
+.black {
+  fill: rgb(56, 62, 57);
+}
+
+.white {
+  fill: white;
+}
