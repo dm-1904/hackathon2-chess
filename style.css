@@ -33,3 +33,7 @@
 .white {
   fill: white;
 }
+
+.selected {
+  background-color: rgb(173, 98, 98);
+}
