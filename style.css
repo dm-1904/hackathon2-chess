@@ -1,0 +1,13 @@
+.board {
+  height: 640px;
+  width: 640px;
+  background: black;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.square {
+  height: 80px;
+  width: 80px;
+  background: gray;
+}
