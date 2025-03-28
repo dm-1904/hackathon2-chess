@@ -28,34 +28,37 @@ export const checkLegalMoves = (e) => {
   );
   const columnLetter = columnFromParentClass.slice(-1);
 
-  console.log("Row:", rowNumber);
-  console.log("Column:", columnLetter);
-
   if (!selectedPiece) {
-    console.log("piece", piece);
     moveSelector(piece.id, piece, rowNumber, columnLetter);
   }
 };
 
 const pawn = (piece, currentRow, currentColumn) => {
-  console.log("Selected Piece:", piece);
+  console.log(piece.children[0].classList.contains("black"));
+  const isBlack = piece.children[0].classList.contains("black");
+  const validMoves = [];
 
-  const targetRow = currentRow - 1;
+  const targetRow = isBlack ? currentRow - 1 : currentRow + 1;
+  const doubleMoveRow = isBlack ? currentRow - 2 : currentRow + 2;
+
   const targetSquare = document.querySelector(
     `.square.row-${targetRow}.column-${currentColumn}`
   );
+  if (targetSquare) validMoves.push(targetSquare);
 
-  if (targetSquare) {
-    targetSquare.classList.add("valid-move");
-
-    targetSquare.addEventListener(
-      "click",
-      () => movePiece(piece, targetSquare),
-      {
-        once: true,
-      }
+  if ((isBlack && currentRow === 7) || (!isBlack && currentRow === 2)) {
+    const doubleMoveSquare = document.querySelector(
+      `.square.row-${doubleMoveRow}.column-${currentColumn}`
     );
+    if (doubleMoveSquare) validMoves.push(doubleMoveSquare);
   }
+
+  validMoves.forEach((square) => {
+    square.classList.add("valid-move");
+    square.addEventListener("click", () => movePiece(piece, square), {
+      once: true,
+    });
+  });
 };
 
 const movePiece = (piece, targetSquare) => {
