@@ -63,7 +63,6 @@ const pawn = (piece, currentRow, currentColumn) => {
 };
 
 const movePiece = (piece, targetSquare) => {
-  // Ensure the piece has the "selected" class before moving
   if (!piece.classList.contains("selected")) {
     console.warn("Cannot move a piece that is not selected.");
     return;
