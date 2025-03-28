@@ -1,24 +1,6 @@
 import { startingPossitions } from "./starting-possitions.js";
-
-//  const selectedPiece = document.querySelector(".selected");
-//  if (selectedPiece) {
-//    selectedPiece.classList.remove("selected");
-//  }
-
-//  if (!piece.classList.contains("selected")) {
-//    piece.classList.add("selected");
-//  }
-const checkLegalMoves = (e) => {
-  const piece = e.currentTarget.parentElement;
-  const selectedPiece = piece.classList.contains("selected");
-  console.log(piece.id);
-  document
-    .querySelectorAll(".selected")
-    .forEach((el) => el.classList.remove("selected"));
-  if (!selectedPiece) {
-    piece.classList.add("selected");
-  }
-};
+// import { possibleMoves } from "./moves.js";
+import { checkLegalMoves } from "./moves.js";
 
 const createBoard = () => {
   const board = document.querySelector(".board");
@@ -44,11 +26,11 @@ const createBoard = () => {
   };
 
   startingPossitions.forEach((start, i) => {
+    const column = "ABCDEFGH";
     const square = document.createElement("div");
     const row = Math.floor((63 - i) / 8) + 1;
 
-    square.className = `square row-${row}`;
-    // just added row. add column next
+    square.className = `square row-${row} column-${column[i % 8]}`;
     square.id = i;
     square.classList.add(getSquareColor(row, i));
     board.appendChild(square);
@@ -59,6 +41,11 @@ const createBoard = () => {
       if (piece) assignPieceColor(piece, i);
     }
   });
+
+  // const pieces = document.getElementsByClassName("piece");
+  // Array.from(pieces).forEach((piece) => {
+  //   piece.addEventListener("click", () => possibleMoves(piece.id));
+  // });
 };
 
 document.addEventListener("DOMContentLoaded", createBoard);

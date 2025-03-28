@@ -37,3 +37,7 @@
 .selected {
   background-color: rgb(173, 98, 98);
 }
+
+.valid-move {
+  background-color: darkgray;
+}
