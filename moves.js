@@ -1,9 +1,12 @@
+const moveSelector = (selector, piece, rowNumber, columnLetter) => {
+  if (selector === "pawn") pawn(piece, rowNumber, columnLetter);
+};
+
 export const checkLegalMoves = (e) => {
   const piece = e.currentTarget.parentElement;
   const selectedPiece = piece.classList.contains("selected");
-  console.log(piece.id);
+  console.log("piece.id", piece.id);
 
-  // Always remove "selected" and "valid-move" classes
   document
     .querySelectorAll(".selected")
     .forEach((el) => el.classList.remove("selected"));
@@ -29,14 +32,14 @@ export const checkLegalMoves = (e) => {
   console.log("Column:", columnLetter);
 
   if (!selectedPiece) {
-    pawn(piece, rowNumber, columnLetter);
+    console.log("piece", piece);
+    moveSelector(piece.id, piece, rowNumber, columnLetter);
   }
 };
 
 const pawn = (piece, currentRow, currentColumn) => {
   console.log("Selected Piece:", piece);
 
-  // Highlight only the square one row below the current row
   const targetRow = currentRow - 1;
   const targetSquare = document.querySelector(
     `.square.row-${targetRow}.column-${currentColumn}`
@@ -45,7 +48,6 @@ const pawn = (piece, currentRow, currentColumn) => {
   if (targetSquare) {
     targetSquare.classList.add("valid-move");
 
-    // Add event listener to the valid square
     targetSquare.addEventListener(
       "click",
       () => movePiece(piece, targetSquare),
@@ -57,20 +59,16 @@ const pawn = (piece, currentRow, currentColumn) => {
 };
 
 const movePiece = (piece, targetSquare) => {
-  // Remove the piece from its current square
   const currentSquare = piece.parentElement;
   currentSquare.innerHTML = "";
 
-  // Move the piece to the target square
   targetSquare.innerHTML = "";
   targetSquare.appendChild(piece);
 
-  // Clear valid move highlights
   document
     .querySelectorAll(".valid-move")
     .forEach((square) => square.classList.remove("valid-move"));
 
-  // Ensure the piece is no longer selected after moving
   document
     .querySelectorAll(".selected")
     .forEach((el) => el.classList.remove("selected"));
