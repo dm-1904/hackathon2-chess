@@ -39,5 +39,18 @@
 }
 
 .valid-move {
-  background-color: darkgray;
+  /* background-color: darkgray; */
+  border: 5px solid;
+  box-sizing: border-box;
+  animation: blink 2s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    border-color: rgb(123, 123, 123);
+  }
+  50% {
+    border-color: transparent;
+  }
 }

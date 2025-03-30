@@ -33,7 +33,7 @@ export const checkLegalMoves = (e) => {
   }
 };
 
-const pawn = (piece, currentRow, currentColumn) => {
+const pawn = (piece, currentRow, columnLetter) => {
   const isBlack = piece.children[0].classList.contains("black");
   const validMoves = [];
 
@@ -41,13 +41,13 @@ const pawn = (piece, currentRow, currentColumn) => {
   const doubleMoveRow = isBlack ? currentRow - 2 : currentRow + 2;
 
   const targetSquare = document.querySelector(
-    `.square.row-${targetRow}.column-${currentColumn}`
+    `.square.row-${targetRow}.column-${columnLetter}`
   );
   if (targetSquare) validMoves.push(targetSquare);
 
   if ((isBlack && currentRow === 7) || (!isBlack && currentRow === 2)) {
     const doubleMoveSquare = document.querySelector(
-      `.square.row-${doubleMoveRow}.column-${currentColumn}`
+      `.square.row-${doubleMoveRow}.column-${columnLetter}`
     );
     if (doubleMoveSquare) validMoves.push(doubleMoveSquare);
   }
