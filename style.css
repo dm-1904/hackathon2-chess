@@ -42,15 +42,30 @@
   /* background-color: darkgray; */
   border: 5px solid;
   box-sizing: border-box;
-  animation: blink 2s infinite;
+  animation: blink 3s infinite;
 }
 
 @keyframes blink {
   0%,
   100% {
-    border-color: rgb(123, 123, 123);
+    border-color: rgb(82, 82, 82);
   }
   50% {
     border-color: transparent;
   }
+}
+
+.vulnerable {
+  /* margin: 5px; */
+  outline: 2px solid red;
+  box-sizing: border-box;
+  margin-bottom: 0px;
+  height: 100%;
+}
+
+.vulnerable svg {
+  margin: 4.5px;
+}
+
+@keyframes blink2 {
 }
