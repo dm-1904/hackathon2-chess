@@ -1,13 +1,25 @@
 import { pawn } from "./piece-functions/pawn.js";
+import { gameState } from "./main.js";
 
+/**
+ * Selects the appropriate move logic based on the piece type.
+ * @param {string} selector - The type of the piece (e.g., "pawn").
+ * @param {HTMLElement} piece - The piece element.
+ * @param {number} rowNumber - The current row of the piece.
+ * @param {string} columnLetter - The current column of the piece.
+ */
 const moveSelector = (selector, piece, rowNumber, columnLetter) => {
   if (selector === "pawn") pawn(piece, rowNumber, columnLetter);
 };
 
+/**
+ * Handles the logic for selecting a piece and displaying its valid moves.
+ * @param {Event} e - The click event triggered by selecting a piece.
+ */
 export const checkLegalMoves = (e) => {
   const piece = e.currentTarget.parentElement;
   const selectedPiece = piece.classList.contains("selected");
-  console.log("piece.id", piece.id);
+  if (!e.currentTarget.classList.contains(gameState.whosTurn)) return;
 
   document
     .querySelectorAll(".selected")
@@ -38,6 +50,11 @@ export const checkLegalMoves = (e) => {
   }
 };
 
+/**
+ * Moves a piece to the target square and updates the game state.
+ * @param {HTMLElement} piece - The piece element to move.
+ * @param {HTMLElement} targetSquare - The square to move the piece to.
+ */
 export const movePiece = (piece, targetSquare) => {
   if (!piece.classList.contains("selected")) {
     console.warn("Cannot move a piece that is not selected.");
@@ -61,6 +78,17 @@ export const movePiece = (piece, targetSquare) => {
   document
     .querySelectorAll(".vulnerable")
     .forEach((el) => el.classList.remove("vulnerable"));
+
+  if (gameState.whosTurn === "white") {
+    gameState.whosTurn = "black";
+  } else {
+    gameState.whosTurn = "white";
+  }
+
+  const turnDiv = document.querySelector(".whos-turn");
+  if (turnDiv) {
+    turnDiv.innerHTML = gameState.whosTurn;
+  }
 
   console.log(`Moved piece to square: ${targetSquare.id}`);
 };

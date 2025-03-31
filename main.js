@@ -1,10 +1,24 @@
 import { startingPossitions } from "./starting-possitions.js";
-// import { possibleMoves } from "./moves.js";
 import { checkLegalMoves } from "./moves.js";
 
+export const gameState = {
+  whosTurn: "white",
+};
+
+/**
+ * Creates the chessboard and initializes the game state.
+ * - Assigns colors to squares.
+ * - Places pieces on the board based on starting positions.
+ * - Adds event listeners to pieces for move handling.
+ */
 const createBoard = () => {
   const board = document.querySelector(".board");
   if (!board) return console.error("Board element not found");
+
+  const turnDiv = document.querySelector(".whos-turn");
+  if (turnDiv) {
+    turnDiv.innerHTML = gameState.whosTurn;
+  }
 
   const getSquareColor = (row, i) =>
     row % 2 === 0
@@ -15,6 +29,11 @@ const createBoard = () => {
       ? "dark-square"
       : "light-square";
 
+  /**
+   * Assigns a color to a piece and adds an event listener for moves.
+   * @param {HTMLElement} piece - The piece element.
+   * @param {number} i - The index of the piece in the starting positions array.
+   */
   const assignPieceColor = (piece, i) => {
     const color = i <= 15 ? "black" : i >= 48 ? "white" : null;
     if (color && piece.firstElementChild) {
@@ -41,11 +60,6 @@ const createBoard = () => {
       if (piece) assignPieceColor(piece, i);
     }
   });
-
-  // const pieces = document.getElementsByClassName("piece");
-  // Array.from(pieces).forEach((piece) => {
-  //   piece.addEventListener("click", () => possibleMoves(piece.id));
-  // });
 };
 
 document.addEventListener("DOMContentLoaded", createBoard);

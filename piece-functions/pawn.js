@@ -1,4 +1,4 @@
-import { movePiece } from "../moves.js";
+import { movePiece } from "../../moves.js";
 
 export const pawn = (piece, currentRow, columnLetter) => {
   const isBlack = piece.children[0].classList.contains("black");
@@ -8,6 +8,7 @@ export const pawn = (piece, currentRow, columnLetter) => {
   const targetRow = isBlack ? currentRow - 1 : currentRow + 1;
   const doubleMoveRow = isBlack ? currentRow - 2 : currentRow + 2;
 
+  // One step forward
   const targetSquare = document.querySelector(
     `.square.row-${targetRow}.column-${columnLetter}`
   );
@@ -15,6 +16,7 @@ export const pawn = (piece, currentRow, columnLetter) => {
     validMoves.push(targetSquare);
   }
 
+  // Two steps forward from starting row
   if ((isBlack && currentRow === 7) || (!isBlack && currentRow === 2)) {
     const doubleMoveSquare = document.querySelector(
       `.square.row-${doubleMoveRow}.column-${columnLetter}`
@@ -24,6 +26,7 @@ export const pawn = (piece, currentRow, columnLetter) => {
     }
   }
 
+  // Diagonal captures
   const leftDiagonalColumn = columns[columns.indexOf(columnLetter) - 1] || null;
   const rightDiagonalColumn =
     columns[columns.indexOf(columnLetter) + 1] || null;
@@ -32,15 +35,17 @@ export const pawn = (piece, currentRow, columnLetter) => {
     const leftDiagonalSquare = document.querySelector(
       `.square.row-${targetRow}.column-${leftDiagonalColumn}`
     );
-    if (
-      leftDiagonalSquare &&
-      leftDiagonalSquare.querySelector(".piece") &&
-      !leftDiagonalSquare
-        .querySelector(".piece")
-        .classList.contains(isBlack ? "black" : "white")
-    ) {
-      validMoves.push(leftDiagonalSquare);
-      leftDiagonalSquare.querySelector(".piece").classList.add("vulnerable");
+    if (leftDiagonalSquare) {
+      const leftPiece = leftDiagonalSquare.querySelector(".piece");
+
+      if (
+        leftPiece &&
+        ((isBlack && leftPiece.children[0].classList.contains("white")) ||
+          (!isBlack && leftPiece.children[0].classList.contains("black")))
+      ) {
+        validMoves.push(leftDiagonalSquare);
+        leftPiece.classList.add("vulnerable");
+      }
     }
   }
 
@@ -48,18 +53,20 @@ export const pawn = (piece, currentRow, columnLetter) => {
     const rightDiagonalSquare = document.querySelector(
       `.square.row-${targetRow}.column-${rightDiagonalColumn}`
     );
-    if (
-      rightDiagonalSquare &&
-      rightDiagonalSquare.querySelector(".piece") &&
-      !rightDiagonalSquare
-        .querySelector(".piece")
-        .classList.contains(isBlack ? "black" : "white")
-    ) {
-      validMoves.push(rightDiagonalSquare);
-      rightDiagonalSquare.querySelector(".piece").classList.add("vulnerable");
+    if (rightDiagonalSquare) {
+      const rightPiece = rightDiagonalSquare.querySelector(".piece");
+      if (
+        rightPiece &&
+        ((isBlack && rightPiece.children[0].classList.contains("white")) ||
+          (!isBlack && rightPiece.children[0].classList.contains("black")))
+      ) {
+        validMoves.push(rightDiagonalSquare);
+        rightPiece.classList.add("vulnerable");
+      }
     }
   }
 
+  // Highlight valid moves and add listeners
   if (piece.classList.contains("selected")) {
     validMoves.forEach((square) => {
       square.classList.add("valid-move");
