@@ -1,10 +1,19 @@
-import { movePiece } from "../../moves.js";
+import { movePiece } from "../moves.js";
 
+/**
+ * Handles the logic for determining valid moves for a pawn.
+ * - Pawns can move forward one square if the square is empty.
+ * - Pawns can move forward two squares from their starting position if both squares are empty.
+ * - Pawns can capture diagonally if an opponent's piece is present.
+ * - Highlights valid moves and marks opponent pieces as vulnerable.
+ * @param {HTMLElement} piece - The pawn piece element.
+ * @param {number} currentRow - The current row of the pawn.
+ * @param {string} columnLetter - The current column of the pawn.
+ */
 export const pawn = (piece, currentRow, columnLetter) => {
   const isBlack = piece.children[0].classList.contains("black");
   const validMoves = [];
   const columns = "ABCDEFGH";
-
   const targetRow = isBlack ? currentRow - 1 : currentRow + 1;
   const doubleMoveRow = isBlack ? currentRow - 2 : currentRow + 2;
 
