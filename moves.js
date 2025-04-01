@@ -1,6 +1,7 @@
 import { pawn } from "./piece-functions/pawn.js";
 import { rook } from "./piece-functions/rook.js";
 import { gameState } from "./main.js";
+import { bishop } from "./piece-functions/bishop.js";
 
 /**
  * Selects the appropriate move logic based on the piece type.
@@ -12,6 +13,7 @@ import { gameState } from "./main.js";
 const moveSelector = (selector, piece, rowNumber, columnLetter) => {
   if (selector === "pawn") pawn(piece, rowNumber, columnLetter);
   if (selector === "rook") rook(piece, rowNumber, columnLetter);
+  if (selector === "bishop") bishop(piece, rowNumber, columnLetter);
 };
 
 /**
