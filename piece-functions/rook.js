@@ -2,7 +2,10 @@ import { movePiece } from "../moves.js";
 
 /**
  * Handles the logic for determining valid moves for a rook.
- * - Selects all squares in the same row and column as the rook.
+ * - The rook can move any number of squares vertically or horizontally.
+ * - The rook cannot jump over other pieces.
+ * - The rook can capture opponent pieces but cannot capture pieces of the same color.
+ * - Highlights valid moves and marks opponent pieces as vulnerable.
  * @param {HTMLElement} piece - The rook piece element.
  * @param {number} currentRow - The current row of the rook.
  * @param {string} columnLetter - The current column of the rook.
@@ -10,40 +13,62 @@ import { movePiece } from "../moves.js";
 export const rook = (piece, currentRow, columnLetter) => {
   const isBlack = piece.children[0].classList.contains("black");
   const validMoves = [];
+  const columns = "ABCDEFGH";
 
-  // Select all squares in the same row
-  const rowSquares = document.querySelectorAll(`.square.row-${currentRow}`);
-  rowSquares.forEach((square) => {
-    if (!square.querySelector(".piece")) {
-      validMoves.push(square);
-    } else if (
-      square
-        .querySelector(".piece")
-        .children[0].classList.contains(isBlack ? "white" : "black")
-    ) {
-      validMoves.push(square);
-      square.querySelector(".piece").classList.add("vulnerable");
+  const columnIndex = columns.indexOf(columnLetter);
+
+  // Directions for rook movement: down, up, right, left
+  const directions = [
+    { dRow: 1, dCol: 0 }, // Down
+    { dRow: -1, dCol: 0 }, // Up
+    { dRow: 0, dCol: 1 }, // Right
+    { dRow: 0, dCol: -1 }, // Left
+  ];
+
+  /**
+   * Checks if a piece on a square belongs to the opponent.
+   * @param {HTMLElement} pieceOnSquare - The piece element on the square.
+   * @returns {boolean} - True if the piece belongs to the opponent, false otherwise.
+   */
+  const isOpponentPiece = (pieceOnSquare) => {
+    if (!pieceOnSquare || !pieceOnSquare.children[0]) return false;
+    return isBlack
+      ? pieceOnSquare.children[0].classList.contains("white")
+      : pieceOnSquare.children[0].classList.contains("black");
+  };
+
+  // Process each direction for valid moves
+  for (let { dRow, dCol } of directions) {
+    let r = currentRow;
+    let c = columnIndex;
+
+    while (true) {
+      r += dRow;
+      c += dCol;
+
+      // Stop if the square is out of bounds
+      if (r < 1 || r > 8 || c < 0 || c > 7) break;
+
+      const square = document.querySelector(
+        `.square.row-${r}.column-${columns[c]}`
+      );
+      if (!square) break;
+
+      const pieceOnSquare = square.querySelector(".piece");
+
+      if (!pieceOnSquare) {
+        validMoves.push(square); // Add empty square to valid moves
+      } else {
+        if (isOpponentPiece(pieceOnSquare)) {
+          validMoves.push(square); // Add opponent's piece to valid moves
+          pieceOnSquare.classList.add("vulnerable"); // Mark opponent's piece as vulnerable
+        }
+        break; // Stop processing further squares in this direction
+      }
     }
-  });
+  }
 
-  // Select all squares in the same column
-  const columnSquares = document.querySelectorAll(
-    `.square.column-${columnLetter}`
-  );
-  columnSquares.forEach((square) => {
-    if (!square.querySelector(".piece")) {
-      validMoves.push(square);
-    } else if (
-      square
-        .querySelector(".piece")
-        .children[0].classList.contains(isBlack ? "white" : "black")
-    ) {
-      validMoves.push(square);
-      square.querySelector(".piece").classList.add("vulnerable");
-    }
-  });
-
-  // Highlight valid moves and add listeners
+  // Highlight valid moves and add event listeners
   if (piece.classList.contains("selected")) {
     validMoves.forEach((square) => {
       square.classList.add("valid-move");
@@ -53,5 +78,8 @@ export const rook = (piece, currentRow, columnLetter) => {
     });
   }
 
-  console.log("Valid moves for rook:", validMoves);
+  console.log(
+    "Valid rook moves:",
+    validMoves.map((s) => s.className)
+  );
 };
