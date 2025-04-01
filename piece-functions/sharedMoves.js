@@ -10,8 +10,15 @@ import { movePiece } from "../moves.js";
  * @param {number} currentRow - The current row of the piece.
  * @param {string} columnLetter - The current column of the piece.
  * @param {Array<{dRow: number, dCol: number}>} directions - The movement directions for the piece.
+ * @param {number} limit - The maximum number of squares the piece can move in one direction (0 for unlimited).
  */
-export const calculateMoves = (piece, currentRow, columnLetter, directions) => {
+export const calculateMoves = (
+  piece,
+  currentRow,
+  columnLetter,
+  directions,
+  limit = 0
+) => {
   const isBlack = piece.children[0].classList.contains("black");
   const validMoves = [];
   const columns = "ABCDEFGH";
@@ -34,13 +41,16 @@ export const calculateMoves = (piece, currentRow, columnLetter, directions) => {
   for (let { dRow, dCol } of directions) {
     let r = currentRow;
     let c = columnIndex;
+    let steps = 0;
 
     while (true) {
       r += dRow;
       c += dCol;
+      steps++;
 
-      // Stop if the square is out of bounds
-      if (r < 1 || r > 8 || c < 0 || c > 7) break;
+      // Stop if the square is out of bounds or the movement limit is reached
+      if (r < 1 || r > 8 || c < 0 || c > 7 || (limit > 0 && steps > limit))
+        break;
 
       const square = document.querySelector(
         `.square.row-${r}.column-${columns[c]}`

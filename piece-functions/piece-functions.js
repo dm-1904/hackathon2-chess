@@ -1,4 +1,84 @@
+import { calculateMoves } from "./sharedMoves.js";
 import { movePiece } from "../moves.js";
+
+/**
+ * Handles the logic for determining valid moves for a bishop.
+ * - The bishop can move any number of squares diagonally.
+ * @param {HTMLElement} piece - The bishop piece element.
+ * @param {number} currentRow - The current row of the bishop.
+ * @param {string} columnLetter - The current column of the bishop.
+ */
+export const bishop = (piece, currentRow, columnLetter) => {
+  const directions = [
+    { dRow: 1, dCol: -1 }, // Down Left
+    { dRow: -1, dCol: 1 }, // Up Right
+    { dRow: 1, dCol: 1 }, // Down Right
+    { dRow: -1, dCol: -1 }, // Up Left
+  ];
+  calculateMoves(piece, currentRow, columnLetter, directions);
+};
+
+/**
+ * Handles the logic for determining valid moves for a rook.
+ * - The rook can move any number of squares vertically or horizontally.
+ * @param {HTMLElement} piece - The rook piece element.
+ * @param {number} currentRow - The current row of the rook.
+ * @param {string} columnLetter - The current column of the rook.
+ */
+export const rook = (piece, currentRow, columnLetter) => {
+  const directions = [
+    { dRow: 1, dCol: 0 }, // Down
+    { dRow: -1, dCol: 0 }, // Up
+    { dRow: 0, dCol: 1 }, // Right
+    { dRow: 0, dCol: -1 }, // Left
+  ];
+  calculateMoves(piece, currentRow, columnLetter, directions);
+};
+
+/**
+ * Handles the logic for determining valid moves for a queen.
+ * - The queen can move any number of squares vertically, horizontally, or diagonally.
+ * - Combines the movement logic of both the rook and the bishop.
+ * @param {HTMLElement} piece - The queen piece element.
+ * @param {number} currentRow - The current row of the queen.
+ * @param {string} columnLetter - The current column of the queen.
+ */
+export const queen = (piece, currentRow, columnLetter) => {
+  const directions = [
+    { dRow: 1, dCol: 0 }, // Down
+    { dRow: -1, dCol: 0 }, // Up
+    { dRow: 0, dCol: 1 }, // Right
+    { dRow: 0, dCol: -1 }, // Left
+    { dRow: 1, dCol: -1 }, // Down Left
+    { dRow: -1, dCol: 1 }, // Up Right
+    { dRow: 1, dCol: 1 }, // Down Right
+    { dRow: -1, dCol: -1 }, // Up Left
+  ];
+  calculateMoves(piece, currentRow, columnLetter, directions);
+};
+
+/**
+ * Handles the logic for determining valid moves for a king.
+ * - The king can move one square in any direction.
+ * - The king cannot move into a square that would place it in check.
+ * @param {HTMLElement} piece - The king piece element.
+ * @param {number} currentRow - The current row of the king.
+ * @param {string} columnLetter - The current column of the king.
+ */
+export const king = (piece, currentRow, columnLetter) => {
+  const directions = [
+    { dRow: 1, dCol: 0 }, // Down
+    { dRow: -1, dCol: 0 }, // Up
+    { dRow: 0, dCol: 1 }, // Right
+    { dRow: 0, dCol: -1 }, // Left
+    { dRow: 1, dCol: -1 }, // Down Left
+    { dRow: -1, dCol: 1 }, // Up Right
+    { dRow: 1, dCol: 1 }, // Down Right
+    { dRow: -1, dCol: -1 }, // Up Left
+  ];
+  const limit = 1; // Limit movement to one square
+  calculateMoves(piece, currentRow, columnLetter, directions, limit);
+};
 
 /**
  * Handles the logic for determining valid moves for a pawn.
