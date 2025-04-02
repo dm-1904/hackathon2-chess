@@ -81,6 +81,30 @@ export const king = (piece, currentRow, columnLetter) => {
 };
 
 /**
+ * Handles the logic for determining valid moves for a knight.
+ * - The knight moves in an "L" shape: two squares in one direction and one square perpendicular to that direction.
+ * - The knight can jump over other pieces.
+ * - The knight can capture opponent pieces but cannot capture pieces of the same color.
+ * @param {HTMLElement} piece - The knight piece element.
+ * @param {number} currentRow - The current row of the knight.
+ * @param {string} columnLetter - The current column of the knight.
+ */
+export const knight = (piece, currentRow, columnLetter) => {
+  const directions = [
+    { dRow: 2, dCol: 1 }, // Down 2, Right 1
+    { dRow: 2, dCol: -1 }, // Down 2, Left 1
+    { dRow: -2, dCol: 1 }, // Up 2, Right 1
+    { dRow: -2, dCol: -1 }, // Up 2, Left 1
+    { dRow: 1, dCol: 2 }, // Down 1, Right 2
+    { dRow: 1, dCol: -2 }, // Down 1, Left 2
+    { dRow: -1, dCol: 2 }, // Up 1, Right 2
+    { dRow: -1, dCol: -2 }, // Up 1, Left 2
+  ];
+  const limit = 1; // Limit movement to one step in each direction
+  calculateMoves(piece, currentRow, columnLetter, directions, limit);
+};
+
+/**
  * Handles the logic for determining valid moves for a pawn.
  * - Pawns can move forward one square if the square is empty.
  * - Pawns can move forward two squares from their starting position if both squares are empty.

@@ -3,7 +3,7 @@ import { movePiece } from "../moves.js";
 /**
  * Handles the logic for determining valid moves for a piece based on its movement directions.
  * - The piece can move in specified directions until it encounters another piece or the board boundary.
- * - The piece cannot jump over other pieces.
+ * - The piece cannot jump over other pieces unless it is a knight.
  * - The piece can capture opponent pieces but cannot capture pieces of the same color.
  * - Highlights valid moves and marks opponent pieces as vulnerable.
  * @param {HTMLElement} piece - The piece element.
@@ -20,6 +20,7 @@ export const calculateMoves = (
   limit = 0
 ) => {
   const isBlack = piece.children[0].classList.contains("black");
+  const isKnight = piece.id === "knight";
   const validMoves = [];
   const columns = "ABCDEFGH";
 
@@ -66,8 +67,11 @@ export const calculateMoves = (
           validMoves.push(square); // Add opponent's piece to valid moves
           pieceOnSquare.classList.add("vulnerable"); // Mark opponent's piece as vulnerable
         }
-        break; // Stop processing further squares in this direction
+        if (!isKnight) break; // Stop processing further squares unless it's a knight
       }
+
+      // Knights only move one step in their unique directions
+      if (isKnight) break;
     }
   }
 

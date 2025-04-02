@@ -69,3 +69,37 @@
 
 @keyframes blink2 {
 }
+
+.captured-pieces {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.captured-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.captured-container .piece {
+  width: 40px;
+  height: 40px;
+}
+
+.captured-container .piece svg {
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+}
+
+.captured-container.white {
+  background-color: rgb(213, 213, 168);
+}
+
+.captured-container.black {
+  background-color: rgba(117, 150, 85, 255);
+}

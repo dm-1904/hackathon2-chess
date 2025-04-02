@@ -4,11 +4,11 @@ import {
   bishop,
   queen,
   rook,
+  knight,
 } from "./piece-functions/piece-functions.js";
-// import { rook } from "./piece-functions/piece-functions.js";
 import { gameState } from "./main.js";
-// import { bishop } from "./piece-functions/piece-functions.js";
-// import { queen } from "./piece-functions/piece-functions.js";
+
+export const capturedPieces = []; // Array to store captured pieces
 
 /**
  * Selects the appropriate move logic based on the piece type.
@@ -23,6 +23,7 @@ const moveSelector = (selector, piece, rowNumber, columnLetter) => {
   if (selector === "bishop") bishop(piece, rowNumber, columnLetter);
   if (selector === "queen") queen(piece, rowNumber, columnLetter);
   if (selector === "king") king(piece, rowNumber, columnLetter);
+  if (selector === "knight") knight(piece, rowNumber, columnLetter);
 };
 
 /**
@@ -32,8 +33,11 @@ const moveSelector = (selector, piece, rowNumber, columnLetter) => {
 export const checkLegalMoves = (e) => {
   const piece = e.currentTarget.parentElement;
   const selectedPiece = piece.classList.contains("selected");
+
+  // Ensure the piece belongs to the current player
   if (!e.currentTarget.classList.contains(gameState.whosTurn)) return;
 
+  // Clear previous selections and valid moves
   document
     .querySelectorAll(".selected")
     .forEach((el) => el.classList.remove("selected"));
@@ -44,6 +48,7 @@ export const checkLegalMoves = (e) => {
     .querySelectorAll(".vulnerable")
     .forEach((el) => el.classList.remove("vulnerable"));
 
+  // Toggle selection
   if (!selectedPiece) {
     piece.classList.add("selected");
   }
@@ -69,39 +74,69 @@ export const checkLegalMoves = (e) => {
  * @param {HTMLElement} targetSquare - The square to move the piece to.
  */
 export const movePiece = (piece, targetSquare) => {
+  // Ensure the piece is selected before moving
   if (!piece.classList.contains("selected")) {
     console.warn("Cannot move a piece that is not selected.");
     return;
   }
 
+  // Clear the current square
   const currentSquare = piece.parentElement;
   currentSquare.innerHTML = "";
 
+  // Handle captured pieces
+  const capturedPiece = targetSquare.querySelector(".piece");
+  if (capturedPiece) {
+    // Store the captured piece
+    capturedPieces.push(capturedPiece);
+
+    // Preserve the original piece structure
+    const capturedContainer = document.querySelector(
+      `.captured-container.${gameState.whosTurn}`
+    );
+
+    if (capturedContainer) {
+      // Clone the piece with its full structure
+      const capturedClone = capturedPiece.cloneNode(true);
+      // Ensure the SVG retains its class for color
+      const svgElement = capturedClone.querySelector("svg");
+      svgElement.classList.add(
+        capturedPiece.querySelector("svg").classList.contains("white")
+          ? "white"
+          : "black"
+      );
+      capturedContainer.appendChild(capturedClone);
+      // call helper function here to add
+      const capturedTest = document.getElementsByClassName(
+        "captured-container white"
+      );
+      console.log(capturedTest);
+    }
+  }
+
+  // Move the piece to the target square
   targetSquare.innerHTML = "";
   targetSquare.appendChild(piece);
 
+  // Clear valid moves and selection
   document
     .querySelectorAll(".valid-move")
     .forEach((square) => square.classList.remove("valid-move"));
-
   document
     .querySelectorAll(".selected")
     .forEach((el) => el.classList.remove("selected"));
-
   document
     .querySelectorAll(".vulnerable")
     .forEach((el) => el.classList.remove("vulnerable"));
 
-  if (gameState.whosTurn === "white") {
-    gameState.whosTurn = "black";
-  } else {
-    gameState.whosTurn = "white";
-  }
+  // Update the turn
+  gameState.whosTurn = gameState.whosTurn === "white" ? "black" : "white";
 
+  // Update the turn display
   const turnDiv = document.querySelector(".whos-turn");
   if (turnDiv) {
     turnDiv.innerHTML = gameState.whosTurn;
   }
-
-  console.log(`Moved piece to square: ${targetSquare.id}`);
 };
+
+function addScoreTogether(arr) {}
