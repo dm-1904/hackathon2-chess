@@ -13,26 +13,31 @@
     <title>Chess</title>
   </head>
   <body>
-    <h1>Welcome to my awesome chess game!</h1>
+    <h1>Welcome to Damon's awesome chess game!</h1>
     <div class="your-turn">
       Your turn
       <span class="whos-turn"></span>
     </div>
-    <div class="board"></div>
-    <div class="captured-pieces">
-      <div class="captured-white">
-        <h3>
-          White's Captured Pieces (Score: <span class="white-score">0</span>)
-        </h3>
-        <div class="captured-container white"></div>
-      </div>
-      <div class="captured-black">
-        <h3>
-          Black's Captured Pieces (Score: <span class="black-score">0</span>)
-        </h3>
-        <div class="captured-container black"></div>
+    <div class="game">
+      <div class="board"></div>
+      <div class="captured-pieces">
+        <div class="captured-white">
+          <h3>White's Captured Pieces</h3>
+          <div class="captured-container white"></div>
+          <h2 class="white-score-box">
+            (Score: <span class="white-score">0</span>)
+          </h2>
+        </div>
+        <div class="captured-black">
+          <h3>Black's Captured Pieces</h3>
+          <div class="captured-container black"></div>
+          <h2 class="black-score-box">
+            (Score: <span class="black-score">0</span>)
+          </h2>
+        </div>
       </div>
     </div>
+
     <script
       type="module"
       src="/pieces.js"

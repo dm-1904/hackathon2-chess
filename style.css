@@ -1,9 +1,29 @@
+.game {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+  align-items: center;
+}
+
 .board {
   height: 640px;
   width: 640px;
   background: black;
   display: flex;
   flex-wrap: wrap;
+}
+
+.captured-container,
+.black,
+.white {
+  width: 255px;
+  /* margin: 20px; */
+}
+
+.captured-black,
+.captured-white {
+  margin: 20px;
 }
 
 .square {
