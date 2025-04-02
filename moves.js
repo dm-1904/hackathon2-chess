@@ -10,6 +10,18 @@ import { gameState } from "./main.js";
 
 export const capturedPieces = []; // Array to store captured pieces
 
+export const gameScores = {
+  white: 0,
+  black: 0,
+};
+
+export const updateScoreDisplay = () => {
+  const whiteScoreEl = document.querySelector(".white-score");
+  const blackScoreEl = document.querySelector(".black-score");
+  if (whiteScoreEl) whiteScoreEl.textContent = gameScores.white;
+  if (blackScoreEl) blackScoreEl.textContent = gameScores.black;
+};
+
 /**
  * Selects the appropriate move logic based on the piece type.
  * @param {string} selector - The type of the piece (e.g., "pawn").
@@ -69,6 +81,18 @@ export const checkLegalMoves = (e) => {
 };
 
 /**
+ * Adds score based on the captured piece's data-score attribute.
+ * @param {HTMLElement} capturedPiece - The captured piece element.
+ * @param {string} capturingColor - The color of the capturing piece ("white" or "black").
+ */
+export const addScoreTogether = (capturedPiece, capturingColor) => {
+  const score = parseInt(capturedPiece.dataset.score) || 0;
+  gameScores[capturingColor] += score;
+  updateScoreDisplay();
+  console.log(`${capturingColor}'s score: ${gameScores[capturingColor]}`);
+};
+
+/**
  * Moves a piece to the target square and updates the game state.
  * @param {HTMLElement} piece - The piece element to move.
  * @param {HTMLElement} targetSquare - The square to move the piece to.
@@ -87,7 +111,15 @@ export const movePiece = (piece, targetSquare) => {
   // Handle captured pieces
   const capturedPiece = targetSquare.querySelector(".piece");
   if (capturedPiece) {
+    const capturingColor = piece.children[0].classList.contains("white")
+      ? "white"
+      : "black";
+
+    // Calculate score before the piece is removed from the board
+    addScoreTogether(capturedPiece, capturingColor);
+
     // Store the captured piece
+    capturedPiece.classList.add("captured");
     capturedPieces.push(capturedPiece);
 
     // Preserve the original piece structure
@@ -106,11 +138,6 @@ export const movePiece = (piece, targetSquare) => {
           : "black"
       );
       capturedContainer.appendChild(capturedClone);
-      // call helper function here to add
-      const capturedTest = document.getElementsByClassName(
-        "captured-container white"
-      );
-      console.log(capturedTest);
     }
   }
 
@@ -138,5 +165,3 @@ export const movePiece = (piece, targetSquare) => {
     turnDiv.innerHTML = gameState.whosTurn;
   }
 };
-
-function addScoreTogether(arr) {}
