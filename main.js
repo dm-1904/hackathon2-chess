@@ -1,6 +1,14 @@
 import { startingPossitions } from "./starting-possitions.js";
 import { checkLegalMoves } from "./moves.js";
 
+const bannerBox = document.querySelector(".welcome-banner-box");
+const bannerImg = document.createElement("img");
+bannerImg.className = "welcome-banner";
+bannerImg.src = "./assets/scroll-png-26393.png";
+if (bannerBox) {
+  bannerBox.appendChild(bannerImg);
+}
+
 export const gameState = {
   whosTurn: "white",
 };
