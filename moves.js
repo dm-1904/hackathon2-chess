@@ -189,9 +189,12 @@ export const movePiece = (piece, targetSquare) => {
   // Update the turn
   gameState.whosTurn = gameState.whosTurn === "white" ? "black" : "white";
 
-  // Update the turn display
+  // Update the turn display with player name
   const turnDiv = document.querySelector(".whos-turn");
   if (turnDiv) {
-    turnDiv.innerHTML = gameState.whosTurn;
+    const currentPlayer = gameState.players[gameState.whosTurn];
+    turnDiv.innerHTML = currentPlayer
+      ? ` ${currentPlayer}`
+      : ` ${gameState.whosTurn}`;
   }
 };

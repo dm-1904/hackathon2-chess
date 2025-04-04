@@ -40,9 +40,11 @@ body {
 .game {
   position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 700px;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  width: 1300px;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.75);
   border-radius: 10px;
@@ -54,7 +56,7 @@ body {
 .headerImg {
   display: block;
   margin: 0 auto 20px;
-  width: 600px;
+  width: 500px;
   max-width: 80vw;
   height: auto;
   position: relative;
@@ -80,7 +82,18 @@ body {
 
 .captured-black,
 .captured-white {
-  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  pointer-events: auto;
+}
+
+.captured-white {
+  margin-left: 20px;
+}
+
+.captured-black {
+  margin-right: 100px;
 }
 
 .captured-black h3,
@@ -154,8 +167,11 @@ body {
 
 .captured-pieces {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
-  margin-top: 20px;
+  width: 100%;
+  position: absolute;
+  pointer-events: none;
 }
 
 .captured-container {
@@ -277,7 +293,7 @@ body {
 .your-turn {
   text-align: center;
   font-size: 50px;
-  margin: 20px 0;
+  /* margin: 20px 0; */
   color: white;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   display: none;
