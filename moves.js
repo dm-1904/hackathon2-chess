@@ -93,6 +93,33 @@ export const addScoreTogether = (capturedPiece, capturingColor) => {
 };
 
 /**
+ * Handles the logic for king capture and displays the winner.
+ * @param {HTMLElement} capturedPiece - The captured piece element.
+ * @param {string} capturingColor - The color of the capturing piece ("white" or "black").
+ */
+export const handleKingCapture = (capturedPiece, capturingColor) => {
+  const game = document.querySelector(".game");
+  const bannerBox = document.querySelector(".welcome-banner-box");
+  const welcomeForm = document.querySelector(".welcome-form");
+
+  if (capturedPiece.id === "king") {
+    const winner = gameState.players[capturingColor];
+    // Hide game and form
+    game.style.display = "none";
+    if (welcomeForm) welcomeForm.style.display = "none";
+
+    // Show and update banner
+    bannerBox.style.display = "flex";
+    const victoryText = document.createElement("h1");
+    victoryText.textContent = `Checkmate! ${winner} Wins!`;
+    victoryText.style.position = "absolute";
+    victoryText.style.color = "white";
+    victoryText.style.textShadow = "2px 2px 4px black";
+    bannerBox.appendChild(victoryText);
+  }
+};
+
+/**
  * Moves a piece to the target square and updates the game state.
  * @param {HTMLElement} piece - The piece element to move.
  * @param {HTMLElement} targetSquare - The square to move the piece to.
@@ -114,6 +141,9 @@ export const movePiece = (piece, targetSquare) => {
     const capturingColor = piece.children[0].classList.contains("white")
       ? "white"
       : "black";
+
+    // Check for king capture before removing the piece
+    handleKingCapture(capturedPiece, capturingColor);
 
     // Calculate score before the piece is removed from the board
     addScoreTogether(capturedPiece, capturingColor);

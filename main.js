@@ -1,58 +1,105 @@
 import { startingPossitions } from "./starting-possitions.js";
 import { checkLegalMoves } from "./moves.js";
 
-const bannerBox = document.querySelector(".welcome-banner-box");
-const bannerImg = document.createElement("img");
-const welcomeForm = document.createElement("form");
-const welcomeHeader = document.createElement("h1");
-const plsEnterNames = document.createElement("span");
-const p1Label = document.createElement("label");
-const p1Input = document.createElement("input");
-const p2Label = document.createElement("label");
-const p2Input = document.createElement("input");
-const submitButton = document.createElement("button");
+localStorage.removeItem("chessPlayers");
 
-// Set up form elements
-bannerImg.className = "welcome-banner";
-bannerImg.src = "./assets/scroll-png-26393.png";
-welcomeForm.className = "welcome-form";
-welcomeHeader.textContent = "Welcome to Chess!";
-plsEnterNames.textContent = "Please enter player names";
-p1Label.textContent = "White Player:";
-p2Label.textContent = "Black Player:";
-p1Input.type = "text";
-p2Input.type = "text";
-p1Input.required = true;
-p2Input.required = true;
-submitButton.textContent = "Start Game";
-
-// Append form elements
-welcomeForm.appendChild(welcomeHeader);
-welcomeForm.appendChild(plsEnterNames);
-welcomeForm.appendChild(p1Label);
-welcomeForm.appendChild(p1Input);
-welcomeForm.appendChild(p2Label);
-welcomeForm.appendChild(p2Input);
-welcomeForm.appendChild(submitButton);
-
-if (bannerBox) {
-  bannerBox.appendChild(bannerImg);
-  bannerBox.appendChild(welcomeForm);
-
-  // Form submit handler
-  welcomeForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const headerImg = document.querySelector(".headerImg");
-    const game = document.querySelector(".game");
-
-    // Hide welcome banner and show game
-    bannerBox.style.display = "none";
-    headerImg.style.display = "block";
-    game.style.display = "flex";
-  });
-}
 export const gameState = {
   whosTurn: "white",
+  players: {
+    white: "",
+    black: "",
+  },
+};
+
+const createWelcomeForm = () => {
+  const bannerBox = document.querySelector(".welcome-banner-box");
+  const bannerImg = document.createElement("img");
+  const welcomeForm = document.createElement("form");
+  const welcomeHeader = document.createElement("h1");
+  const plsEnterNames = document.createElement("span");
+  const nameInputBox = document.createElement("div");
+  const p1InputBox = document.createElement("div");
+  const p1Label = document.createElement("label");
+  const p1Input = document.createElement("input");
+  const p2InputBox = document.createElement("div");
+  const p2Label = document.createElement("label");
+  const p2Input = document.createElement("input");
+  const submitButton = document.createElement("button");
+
+  // Set up form elements
+  bannerImg.className = "welcome-banner";
+  bannerImg.src = "./assets/scroll-png-26393.png";
+  welcomeForm.className = "welcome-form";
+  welcomeHeader.className = "welcome-header";
+  welcomeHeader.textContent = "Welcome to Chess!";
+  plsEnterNames.textContent = "Please enter player names";
+  nameInputBox.className = "name-input-box";
+  p1InputBox.className = "p1-input-box";
+  p1Label.className = "white-label";
+  p1Label.textContent = "White";
+  p2InputBox.className = "p2-input-box";
+  p2Label.className = "black-label";
+  p2Label.textContent = "Black";
+  p1Input.type = "text";
+  p2Input.type = "text";
+  p1Input.required = true;
+  p2Input.required = true;
+  submitButton.textContent = "Start Game";
+
+  // Append form elements
+  welcomeForm.appendChild(welcomeHeader);
+  welcomeForm.appendChild(plsEnterNames);
+  welcomeForm.appendChild(nameInputBox);
+  nameInputBox.appendChild(p1InputBox);
+  p1InputBox.appendChild(p1Label);
+  p1InputBox.appendChild(p1Input);
+  nameInputBox.appendChild(p2InputBox);
+  p2InputBox.appendChild(p2Label);
+  p2InputBox.appendChild(p2Input);
+  welcomeForm.appendChild(submitButton);
+
+  if (bannerBox) {
+    bannerBox.appendChild(bannerImg);
+    bannerBox.appendChild(welcomeForm);
+
+    // Form submit handler
+    welcomeForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      gameState.players.white = p1Input.value;
+      gameState.players.black = p2Input.value;
+      localStorage.setItem("chessPlayers", JSON.stringify(gameState.players));
+      updatePlayerDisplays();
+
+      const headerImg = document.querySelector(".headerImg");
+      const yourTurn = document.querySelector(".your-turn");
+      const game = document.querySelector(".game");
+      bannerBox.style.display = "none";
+      headerImg.style.display = "block";
+      game.style.display = "flex";
+      yourTurn.style.display = "flex";
+    });
+  }
+};
+
+const updateTurnDisplay = () => {
+  const turnDiv = document.querySelector(".whos-turn");
+  if (turnDiv) {
+    const currentPlayer = gameState.players[gameState.whosTurn];
+    turnDiv.innerHTML = currentPlayer
+      ? ` ${currentPlayer}`
+      : ` ${gameState.whosTurn}`;
+  }
+};
+
+const updatePlayerDisplays = () => {
+  // Update captured pieces headers
+  const whiteHeader = document.querySelector(".captured-white h3");
+  const blackHeader = document.querySelector(".captured-black h3");
+  if (whiteHeader) whiteHeader.textContent = `${gameState.players.white}`;
+  if (blackHeader) blackHeader.textContent = `${gameState.players.black}`;
+
+  // Update turn display
+  updateTurnDisplay();
 };
 
 /**
@@ -89,8 +136,6 @@ const createBoard = () => {
     if (color && piece.firstElementChild) {
       piece.firstElementChild.classList.add(color);
       piece.firstElementChild.addEventListener("click", checkLegalMoves);
-    } else {
-      console.warn(`Unexpected structure for piece at index ${i}`, piece);
     }
   };
 
@@ -110,6 +155,11 @@ const createBoard = () => {
       if (piece) assignPieceColor(piece, i);
     }
   });
+
+  updateTurnDisplay();
 };
 
-document.addEventListener("DOMContentLoaded", createBoard);
+document.addEventListener("DOMContentLoaded", () => {
+  createWelcomeForm();
+  createBoard();
+});
