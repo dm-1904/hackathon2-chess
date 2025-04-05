@@ -6,15 +6,28 @@ import {
   rook,
   knight,
 } from "./piece-functions/piece-functions.js";
-import { gameState } from "./main.js";
+import { gameState, recordMove } from "./main.js";
 
 export const capturedPieces = []; // Array to store captured pieces
 
+/**
+ * gameScores
+ * - An object that tracks the scores for the white and black players.
+ * - Updated whenever a piece is captured.
+ * - Used in conjunction with `addScoreTogether()` to calculate and update scores.
+ */
 export const gameScores = {
   white: 0,
   black: 0,
 };
 
+/**
+ * updateScoreDisplay()
+ * - Updates the score display in the game's UI based on the current `gameScores`.
+ * - Selects the DOM elements for the white and black scores using their class names.
+ * - Updates the `textContent` of these elements with the current scores.
+ * - Ensures the displayed scores are always in sync with the actual game state.
+ */
 export const updateScoreDisplay = () => {
   const whiteScoreEl = document.querySelector(".white-score");
   const blackScoreEl = document.querySelector(".black-score");
@@ -101,21 +114,36 @@ export const handleKingCapture = (capturedPiece, capturingColor) => {
   const game = document.querySelector(".game");
   const bannerBox = document.querySelector(".welcome-banner-box");
   const welcomeForm = document.querySelector(".welcome-form");
+  const headerImg = document.querySelector(".headerImg");
+  const yourTurn = document.querySelector(".your-turn");
 
   if (capturedPiece.id === "king") {
     const winner = gameState.players[capturingColor];
-    // Hide game and form
+    // Hide game, form, and header image
     game.style.display = "none";
+    headerImg.style.display = "none";
+    yourTurn.style.display = "none";
     if (welcomeForm) welcomeForm.style.display = "none";
 
     // Show and update banner
     bannerBox.style.display = "flex";
+    bannerBox.style.flexDirection = "column";
+    bannerBox.style.alignItems = "center";
+    bannerBox.innerHTML = ""; // Clear any existing content
+
     const victoryText = document.createElement("h1");
     victoryText.textContent = `Checkmate! ${winner} Wins!`;
-    victoryText.style.position = "absolute";
-    victoryText.style.color = "white";
-    victoryText.style.textShadow = "2px 2px 4px black";
+    victoryText.className = "victory-text";
+
+    const newGameButton = document.createElement("button");
+    newGameButton.textContent = "New Game";
+    newGameButton.className = "new-game-button";
+    newGameButton.addEventListener("click", () => {
+      window.location.reload();
+    });
+
     bannerBox.appendChild(victoryText);
+    bannerBox.appendChild(newGameButton);
   }
 };
 
@@ -134,6 +162,12 @@ export const movePiece = (piece, targetSquare) => {
   // Clear the current square
   const currentSquare = piece.parentElement;
   currentSquare.innerHTML = "";
+
+  const fromSquare = currentSquare.id;
+  const toSquare = targetSquare.id;
+
+  // Record the move
+  recordMove(piece, fromSquare, toSquare);
 
   // Handle captured pieces
   const capturedPiece = targetSquare.querySelector(".piece");

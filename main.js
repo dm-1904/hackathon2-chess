@@ -9,8 +9,54 @@ export const gameState = {
     white: "",
     black: "",
   },
+  moveHistory: [], // Add this
 };
 
+/**
+ * Records a move in the game history and updates the display.
+ * @param {HTMLElement} piece - The piece that was moved.
+ * @param {string} fromSquare - The starting square ID.
+ * @param {string} toSquare - The destination square ID.
+ */
+export const recordMove = (piece, fromSquare, toSquare) => {
+  const pieceType = piece.id;
+  const player = gameState.players[gameState.whosTurn];
+  const moveNumber = gameState.moveHistory.length + 1;
+
+  // Convert numeric squares to chess notation (e.g., 0 -> a1, 7 -> h1, etc.)
+  const getSquareNotation = (squareId) => {
+    const row = 8 - Math.floor(squareId / 8);
+    const col = String.fromCharCode(97 + (squareId % 8)); // 97 is ASCII for 'a'
+    return `${col}${row}`;
+  };
+
+  const fromNotation = getSquareNotation(parseInt(fromSquare));
+  const toNotation = getSquareNotation(parseInt(toSquare));
+
+  const moveText = `${moveNumber}. ${player} - ${pieceType} - ${fromNotation} - ${toNotation}`;
+
+  gameState.moveHistory.push(moveText);
+  updateMoveHistory();
+};
+
+/**
+ * Updates the move history display with the current game history.
+ * Automatically scrolls to show the latest move.
+ */
+const updateMoveHistory = () => {
+  const historyDisplay = document.querySelector(".move-history");
+  if (historyDisplay) {
+    historyDisplay.innerHTML = gameState.moveHistory
+      .map((move) => `<div class="move">${move}</div>`)
+      .join("");
+    historyDisplay.scrollTop = historyDisplay.scrollHeight;
+  }
+};
+
+/**
+ * Creates and initializes the welcome form with player name inputs.
+ * Sets up form submission handler to start the game.
+ */
 const createWelcomeForm = () => {
   const bannerBox = document.querySelector(".welcome-banner-box");
   const bannerImg = document.createElement("img");
@@ -81,6 +127,10 @@ const createWelcomeForm = () => {
   }
 };
 
+/**
+ * Updates the turn display with the current player's name.
+ * Shows default color if no player name is available.
+ */
 const updateTurnDisplay = () => {
   const turnDiv = document.querySelector(".whos-turn");
   if (turnDiv) {
@@ -91,6 +141,11 @@ const updateTurnDisplay = () => {
   }
 };
 
+/**
+ * Updates all player-related displays including:
+ * - Captured pieces headers
+ * - Turn indicator
+ */
 const updatePlayerDisplays = () => {
   // Update captured pieces headers
   const whiteHeader = document.querySelector(".captured-white h3");
